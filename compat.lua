@@ -1,29 +1,7 @@
---[[   ____    ______
-      /\  _`\ /\__  _\   __
- __  _\ \ \/\_\/_/\ \/ /_\ \___
-/\ \/'\\ \ \/_/_ \ \ \/\___  __\
-\/>  </ \ \ \L\ \ \ \ \/__/\_\_/
- /\_/\_\ \ \____/  \ \_\  \/_/
- \//\/_/  \/___/    \/_/
-
- [=====================================]
- [  Author: Dandraffbal-Stormreaver US ]
- [  xCT+ Version 4.x.x                 ]
- [  ©2020. All Rights Reserved.        ]
- [====================================]]
-
--- No locals for NOOP
-local noop = function() end
-
-local AddonName, addon = ...
-addon.engine = LibStub("AceAddon-3.0"):NewAddon(AddonName, "AceConsole-3.0")
-
-xCT_Plus = addon
-
--- No Operation
-addon.noop = noop
-
-addon.IsTBC = true
+--[[
+    TBC Classic Compatibility Layer
+    Loads BEFORE libs to provide missing API shims
+]]
 
 -- TBC Compatibility: Provide C_Spell, C_Item, C_AddOns wrappers
 if not C_Spell then
@@ -61,11 +39,9 @@ end
 if not C_CurrencyInfo then
     C_CurrencyInfo = {}
     function C_CurrencyInfo.GetCurrencyInfoFromLink(link)
-        -- TBC doesn't have the currency system like later expansions
         return nil
     end
     function C_CurrencyInfo.GetCoinTextureString(money)
-        -- Fallback to simple gold/silver/copper display
         local gold = floor(money / 10000)
         local silver = floor((money % 10000) / 100)
         local copper = money % 100
@@ -107,7 +83,6 @@ end
 -- TBC Compatibility: GetSpecializationInfo (TBC has talent trees, not specs)
 if not GetSpecializationInfo then
     function GetSpecializationInfo(spec)
-        -- Return nil for TBC - talent trees work differently
         return nil, "Talents", nil, nil, nil
     end
 end
@@ -120,10 +95,3 @@ if not string.utf8len then
     string.utf8upper = string.upper
     string.utf8lower = string.lower
 end
-
-local L = {}
-setmetatable(L, {
-    __index = function(self, key) return key end
-})
-
-addon.L = L
